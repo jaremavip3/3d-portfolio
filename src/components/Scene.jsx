@@ -1,28 +1,28 @@
 "use client";
+import { Environment, MeshWobbleMaterial, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+
+import { useRef, useState } from "react";
+import { DirectionalLight, DirectionalLightHelper } from "three";
+
+const Dodecahedron = ({ position, size, color }) => {
+  return (
+    <mesh position={position}>
+      <dodecahedronGeometry />
+      <MeshWobbleMaterial factor={0.3} color={color} />
+    </mesh>
+  );
+};
 
 export default function Scene() {
-  const dodecahedronRef = useRef();
-
-  const Dodecahedron = ({ ...props }) => {
-    useFrame((state, delta) => {
-      dodecahedronRef.current.rotation.x += delta;
-      console.log("dodecahedronRef.current.rotation.x: ", dodecahedronRef.current.rotation.x);
-    });
-    return (
-      <mesh {...props}>
-        <dodecahedronGeometry />
-        <meshStandardMaterial color="hotpink" />
-        <ambientLight />
-      </mesh>
-    );
-  };
-
   return (
     // everything that it inside Canvas is inside WebGL, so it will be rendered by the GPU
     <Canvas>
-      <Dodecahedron ref={dodecahedronRef} position={[0, 0, 0]} size={[1, 1, 1]} />
+      <Environment preset="sunset" />
+      <directionalLight position={[0, 3, 2]} intensity={3} />
+      <ambientLight intensity={0.1} />
+      <Dodecahedron position={[0, 0, 0]} color={"orange"} />
+      <OrbitControls enableZoom={false} />
     </Canvas>
   );
 }
