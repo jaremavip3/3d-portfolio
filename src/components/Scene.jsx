@@ -22,6 +22,12 @@ import {
 const Dodecahedron = ({ position, size, color }) => {
   const { viewport } = useThree();
   const mesh = useRef();
+  useFrame((state, delta) => {
+    const time = state.clock.getElapsedTime();
+    mesh.current.position.x = Math.sin(time * 0.5) * 1;
+    mesh.current.position.y = Math.sin(time * 0.3) * 0.5;
+    mesh.current.rotation.y += delta * 0.2;
+  });
 
   const materialProps = useControls({
     thickness: { value: 0.2, min: 0, max: 3, step: 0.05 },
@@ -53,7 +59,7 @@ const Dodecahedron = ({ position, size, color }) => {
 const EnvironmentFallback = () => (
   <>
     <directionalLight position={[0, 3, 2]} intensity={3} />
-    <ambientLight intensity={0.1} />
+    <ambientLight intensity={0.2} />
   </>
 );
 
@@ -75,12 +81,11 @@ export default function Scene() {
       <Suspense fallback={null}>
         <PresentationControls
           global
-          config={{ mass: 1, tension: 170, friction: 26 }}
+          config={{ mass: 2, tension: 500 }}
+          snap={true}
           rotation={[0, 0, 0]}
-          polar={[-0.4, 0.4]}
-          azimuth={[-0.4, 0.4]}
-          cursor={true} // Shows cursor on desktop
-          touch={[1, 1]} // Better touch response [rotate, pan]
+          polar={[-Math.PI / 5, Math.PI / 5]}
+          azimuth={[-Math.PI / 3, Math.PI / 3]}
         >
           <Dodecahedron position={[0, 0, 0]} />
         </PresentationControls>
